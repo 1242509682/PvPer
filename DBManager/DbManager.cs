@@ -1,8 +1,5 @@
-using System.Data;
-using System.Runtime.Intrinsics.Arm;
 using MySql.Data.MySqlClient;
-using Terraria;
-using TShockAPI;
+using System.Data;
 using TShockAPI.DB;
 
 namespace PvPer
@@ -53,6 +50,13 @@ namespace PvPer
                 list.Add(new DPlayer(reader.Get<int>("AccountID"), reader.Get<int>("Kills"), reader.Get<int>("Deaths")));
             }
             return list;
+        }
+
+        // 清空玩家数据表中的所有记录（羽学加）
+        public bool ClearData()
+        {
+            // 删除Players表中的所有记录
+            return _db.Query("DELETE FROM Players") != 0;
         }
     }
 }

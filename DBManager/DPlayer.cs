@@ -1,7 +1,3 @@
-using Steamworks;
-using Terraria;
-using TShockAPI;
-
 namespace PvPer
 {
     public class DPlayer

@@ -1,4 +1,3 @@
-using Terraria;
 using TShockAPI;
 
 namespace PvPer

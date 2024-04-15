@@ -9,36 +9,52 @@ namespace PvPer
         {
             if (args.Parameters.Count < 1)
             {
-                args.Player.SendErrorMessage("You need to specify a sub-command. (Available sub-commands are: invite, accept, reject, stats, leaderboard)");
+                args.Player.SendErrorMessage("决斗系统指令菜单：\n " +
+                "[c/74D3E8:/pvp add 玩家名] - [c/7EE874:邀请玩家参加决斗] \n " +
+                "[c/74D3E8:/pvp yes] - [c/7EE874:接受决斗] \n " +
+                "[c/74D3E8:/pvp no] - [c/7EE874:拒绝决斗] \n " +
+                "[c/74D3E8:/pvp start] - [c/7EE874:开始挑战]\n " +
+                "[c/FFFE80:/pvp list] - [c/7EE874:排名]\n ");
                 return;
             }
 
             switch (args.Parameters[0].ToLower())
             {
-                case "invite":
+                case "add":
+                case "邀请":
                     if (args.Parameters.Count < 2)
                     {
-                        args.Player.SendErrorMessage("Please specify target player's name.");
+                        args.Player.SendErrorMessage("请指定目标玩家的名称。");
                     }
                     else
                     {
                         InviteCmd(args);
                     }
                     return;
-                case "accept":
+                case "yes":
+                case "接受":
                     AcceptCmd(args);
                     return;
-                case "reject":
+                case "no":
+                case "拒绝":
                     RejectCommand(args);
                     return;
-                case "stats":
+                case "start":
+                case "开始":
                     StatsCommand(args);
                     return;
-                case "leaderboard":
+                case "l":
+                case "list":
+                case "排名":
                     LeaderboardCommand(args);
                     return;
                 default:
-                    args.Player.SendErrorMessage("[Default] You need to specify a sub-command. (Available sub-commands are: invite, accept, reject, stats, leaderboard)");
+                    args.Player.SendErrorMessage("决斗系统指令菜单：\n " +
+                    "[c/74D3E8:/pvp add 玩家名] - [c/7EE874:邀请玩家参加决斗] \n " +
+                    "[c/74D3E8:/pvp yes] - [c/7EE874:接受决斗] \n " +
+                    "[c/74D3E8:/pvp no] - [c/7EE874:拒绝决斗] \n " +
+                    "[c/74D3E8:/pvp start] - [c/7EE874:开始挑战]\n " +
+                    "[c/FFFE80:/pvp list] - [c/7EE874:排名]\n ");
                     return;
             }
         }
@@ -50,13 +66,13 @@ namespace PvPer
 
             if (plrList.Count == 0)
             {
-                args.Player.SendErrorMessage("Player not found.");
+                args.Player.SendErrorMessage("未找到指定玩家。");
                 return;
             }
 
             if (Utils.IsPlayerInADuel(args.Player.Index))
             {
-                args.Player.SendErrorMessage("You're already in a duel right now.");
+                args.Player.SendErrorMessage("您现在已经在决斗中了。");
                 return;
             }
 
@@ -64,19 +80,19 @@ namespace PvPer
 
             if (targetPlr.Index == args.Player.Index)
             {
-                args.Player.SendErrorMessage("You cannot duel yourself!");
+                args.Player.SendErrorMessage("您不能与自己决斗！");
                 return;
             }
 
             if (Utils.IsPlayerInADuel(targetPlr.Index))
             {
-                args.Player.SendErrorMessage($"{targetPlr.Name} is currently in a duel.");
+                args.Player.SendErrorMessage($"{targetPlr.Name} 正在进行一场决斗。");
                 return;
             }
 
             PvPer.Invitations.Add(new Pair(args.Player.Index, targetPlr.Index));
-            args.Player.SendSuccessMessage($"Successfully invited {targetPlr.Name} for a duel.");
-            targetPlr.SendMessage($"{args.Player.Name} has sent you a duel invitation. Do [c/CCFFCC:/duel accept] to accept, [c/FFE6CC:/duel reject] to reject.", 255, 204, 255);
+            args.Player.SendSuccessMessage($"成功邀请 {targetPlr.Name} 进行决斗。");
+            targetPlr.SendMessage($"{args.Player.Name} [c/FE7F81:已向您发送决斗邀请] \n请输入 [c/CCFFCC:/pvp yes 接受]  或 [c/FFE6CC:/pvp no拒绝] ", 255, 204, 255);
         }
 
         private static void AcceptCmd(CommandArgs args)
@@ -85,7 +101,7 @@ namespace PvPer
 
             if (invitation == null)
             {
-                args.Player.SendErrorMessage("There is no active invitation for you.");
+                args.Player.SendErrorMessage("[c/FE7F81:您当前没有收到任何决斗邀请]");
                 return;
             }
 
@@ -98,11 +114,11 @@ namespace PvPer
 
             if (invitation == null)
             {
-                args.Player.SendErrorMessage("There is no active invitation for you.");
+                args.Player.SendErrorMessage("[c/FE7F81:您当前没有收到任何决斗邀请]");
                 return;
             }
 
-            TShock.Players[invitation.Player1].SendErrorMessage("The other player has rejected your duel invitation.");
+            TShock.Players[invitation.Player1].SendErrorMessage("[c/FFCB80:对方玩家已拒绝您的决斗邀请]。");
             PvPer.Invitations.Remove(invitation);
         }
 
@@ -113,14 +129,14 @@ namespace PvPer
                 try
                 {
                     DPlayer plr = PvPer.DbManager.GetDPlayer(args.Player.Account.ID);
-                    args.Player.SendInfoMessage("Your stats:\n" +
-                                                $"Kills: {plr.Kills}\n" +
-                                                $"Deaths: {plr.Deaths}\n" +
-                                                $"Kill/Death Ratio: {plr.GetKillDeathRatio()}");
+                    args.Player.SendInfoMessage("[c/FFCB80:您的战绩:]\n" +
+                                                $"[c/63DC5A:击杀: ]{plr.Kills}\n" +
+                                                $"[c/F56469:死亡:] {plr.Deaths}\n" +
+                                                $"击杀/死亡 [c/5993DB:胜负值: ]{plr.GetKillDeathRatio()}");
                 }
                 catch (NullReferenceException)
                 {
-                    args.Player.SendErrorMessage("Player not found!");
+                    args.Player.SendErrorMessage("玩家未找到！");
                 }
             }
             else
@@ -132,19 +148,19 @@ namespace PvPer
 
                     if (matchedAccounts.Count == 0)
                     {
-                        args.Player.SendErrorMessage("Player not found!");
+                        args.Player.SendErrorMessage("玩家未找到！");
                         return;
                     }
 
                     DPlayer plr = PvPer.DbManager.GetDPlayer(matchedAccounts[0].ID);
-                    args.Player.SendInfoMessage($"{matchedAccounts[0].Name} stats:\n" +
-                                                $"Kills: {plr.Kills}\n" +
-                                                $"Deaths: {plr.Deaths}\n" +
-                                                $"Kill/Death Ratio: {plr.GetKillDeathRatio()}");
+                    args.Player.SendInfoMessage("[c/FFCB80:您的战绩:]\n" +
+                                                $"[c/63DC5A:击杀: ]{plr.Kills}\n" +
+                                                $"[c/F56469:死亡:] {plr.Deaths}\n" +
+                                                $"击杀/死亡 [c/5993DB:胜负值: ]{plr.GetKillDeathRatio()}");
                 }
                 catch (NullReferenceException)
                 {
-                    args.Player.SendErrorMessage("Player not found!");
+                    args.Player.SendErrorMessage("玩家未找到！");
                 }
             }
         }

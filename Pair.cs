@@ -1,8 +1,7 @@
-using TShockAPI;
+using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
-using Microsoft.Xna.Framework;
-using TerrariaApi.Server;
+using TShockAPI;
 
 namespace PvPer
 {
@@ -42,24 +41,24 @@ namespace PvPer
             {
                 if (!plr1.Active || !plr2.Active)
                 {
-                    plr1.SendErrorMessage("Duel has been cancelled because one of the participants is not online.");
-                    plr2.SendErrorMessage("Duel has been cancelled because one of the participants is not online.");
+                    plr1.SendErrorMessage("决斗已被取消，因为其中一名参与者不在线。");
+                    plr2.SendErrorMessage("决斗已被取消，因为其中一名参与者不在线。");
                     PvPer.Invitations.Remove(this);
                     return;
                 }
 
                 if (plr1.Dead || plr2.Dead)
                 {
-                    plr1.SendErrorMessage("Duel has been cancelled because one of the participants is dead.");
-                    plr2.SendErrorMessage("Duel has been cancelled because one of the participants is dead.");
+                    plr1.SendErrorMessage("决斗已被取消，因为其中一名参与者已经死亡。");
+                    plr2.SendErrorMessage("决斗已被取消，因为其中一名参与者已经死亡。");
                     PvPer.Invitations.Remove(this);
                     return;
                 }
 
                 if (Utils.IsPlayerInADuel(plr1.Index) || Utils.IsPlayerInADuel(plr2.Index))
                 {
-                    plr1.SendErrorMessage("Duel has been cancelled because one of the participants is already in a duel.");
-                    plr2.SendErrorMessage("Duel has been cancelled because one of the participants is already in a duel.");
+                    plr1.SendErrorMessage("决斗已被取消，因为其中一名参与者已处于另一场决斗中。");
+                    plr2.SendErrorMessage("决斗已被取消，因为其中一名参与者已处于另一场决斗中。");
                     PvPer.Invitations.Remove(this);
                     return;
                 }
@@ -70,8 +69,8 @@ namespace PvPer
                 return;
             }
 
-            plr1.SendSuccessMessage($"Duel is starting!");
-            plr2.SendSuccessMessage($"Duel is starting!");
+            plr1.SendSuccessMessage($"决斗开始！");
+            plr2.SendSuccessMessage($"决斗开始！");
 
             // Teleport and buffs
             plr1.Teleport(PvPer.Config.Player1PositionX * 16, PvPer.Config.Player1PositionY * 16);
@@ -89,19 +88,19 @@ namespace PvPer
             plr1.SendData(PacketTypes.PlayerDodge, number: plr1.Index, number2: 6);
             plr2.SendData(PacketTypes.PlayerDodge, number: plr1.Index, number2: 6);
 
-            // Move the pair to active duels
+            // 将这对决斗者移入活跃决斗列表
             PvPer.Invitations.Remove(this);
             PvPer.ActiveDuels.Add(this);
 
-            // Countdown and set pvp mode of each player
+            // 计时倒数并为每位玩家设置PvP模式
             Task.Run(async () =>
             {
                 NetMessage.SendData((int)PacketTypes.CreateCombatTextExtended, Player1, -1,
-                    Terraria.Localization.NetworkText.FromLiteral("Duel starting in..."), (int)new Color(0, 255, 0).PackedValue,
+                    Terraria.Localization.NetworkText.FromLiteral("决斗即将开始..."), (int)new Color(0, 255, 0).PackedValue,
                     plr1.X + 16, plr1.Y - 16);
 
                 NetMessage.SendData((int)PacketTypes.CreateCombatTextExtended, Player2, -1,
-                    Terraria.Localization.NetworkText.FromLiteral("Duel starting in..."), (int)new Color(0, 255, 0).PackedValue,
+                    Terraria.Localization.NetworkText.FromLiteral("决斗即将开始..."), (int)new Color(0, 255, 0).PackedValue,
                     plr2.X + 16, plr2.Y - 16);
 
                 for (int i = 5; i > 0; i--)
@@ -119,11 +118,11 @@ namespace PvPer
                 await Task.Delay(1000);
 
                 NetMessage.SendData((int)PacketTypes.CreateCombatTextExtended, Player1, -1,
-                    Terraria.Localization.NetworkText.FromLiteral("GO!!"), (int)new Color(255, 0, 0).PackedValue,
+                    Terraria.Localization.NetworkText.FromLiteral("开战!!"), (int)new Color(255, 0, 0).PackedValue,
                     plr1.X + 16, plr1.Y - 16);
 
                 NetMessage.SendData((int)PacketTypes.CreateCombatTextExtended, Player2, -1,
-                    Terraria.Localization.NetworkText.FromLiteral("Go!!"), (int)new Color(255, 0, 0).PackedValue,
+                    Terraria.Localization.NetworkText.FromLiteral("开战!!"), (int)new Color(255, 0, 0).PackedValue,
                     plr2.X + 16, plr2.Y - 16);
 
                 plr1.TPlayer.hostile = true;
@@ -138,7 +137,7 @@ namespace PvPer
         public void EndDuel(int winner)
         {
             int loser = winner == Player1 ? Player2 : Player1;
-            TSPlayer.All.SendMessage($"{TShock.Players[winner].Name} has won against {TShock.Players[loser].Name}!", 255, 204, 255);
+            TSPlayer.All.SendMessage($"{TShock.Players[winner].Name} 已战胜 {TShock.Players[loser].Name}!", 255, 204, 255);
 
             PvPer.ActiveDuels.Remove(this);
             TShock.Players[winner].SetPvP(false);
