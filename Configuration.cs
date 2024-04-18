@@ -13,7 +13,6 @@ namespace PvPer
         [JsonProperty("离开竞技场杀死玩家")]
         public bool KillPlayer = true;
 
-
         [JsonProperty("邀请者传送坐标.X")]
         public int Player1PositionX = 0;
         [JsonProperty("邀请者传送坐标.Y")]

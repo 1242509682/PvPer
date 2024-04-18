@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>$(MSBuildProjectName) v1.0.3 【决斗系统】</AssemblyName>
+    <AssemblyName>$(MSBuildProjectName) v1.1.0 【决斗系统】</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
