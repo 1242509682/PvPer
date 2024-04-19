@@ -4,8 +4,16 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>$(MSBuildProjectName) v1.1.0 【决斗系统】</AssemblyName>
+    <AssemblyName>$(MSBuildProjectName) v1.1.1 【决斗系统】</AssemblyName>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="PlayerDeathTimer.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="PlayerDeathTimer.txt" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="OTAPI.Upcoming" Version="3.1.20" />

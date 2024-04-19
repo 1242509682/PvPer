@@ -1,4 +1,11 @@
+using Org.BouncyCastle.Asn1.X509;
 using TShockAPI;
+using Microsoft.Xna.Framework;
+using Terraria;
+using Terraria.Utilities;
+using static Org.BouncyCastle.Math.EC.ECCurve;
+using System.Timers;
+using Timer = System.Timers.Timer;
 
 
 
@@ -60,19 +67,18 @@ namespace PvPer
 
         public static bool IsPlayerInArena(TSPlayer player)
         {
-            return player.X >= PvPer.Config.ArenaPosX1 * 16 &&
-                   player.Y >= PvPer.Config.ArenaPosY1 * 16 &&
-                   player.X <= PvPer.Config.ArenaPosX2 * 16 &&
-                   player.Y <= PvPer.Config.ArenaPosY2 * 16;
+            return player.X  >= PvPer.Config.ArenaPosX1 * 16 &&
+                   player.X  <= PvPer.Config.ArenaPosX2 * 16 &&
+                   player.Y  >= PvPer.Config.ArenaPosY1 * 16 &&
+                   player.Y  <= PvPer.Config.ArenaPosY2 * 16;
         }
 
         public static bool IsLocationInArena(int x, int y)
         {
             return x >= PvPer.Config.ArenaPosX1 * 16 &&
-                   y >= PvPer.Config.ArenaPosY1 * 16 &&
-                   x <= PvPer.Config.ArenaPosX2 * 16 &&
-                   y <= PvPer.Config.ArenaPosY2 * 16;
+                   y  >= PvPer.Config.ArenaPosY1 * 16 &&
+                   x  <= PvPer.Config.ArenaPosX2 * 16 &&
+                   y  <= PvPer.Config.ArenaPosY2 * 16;
         }
-
     }
 }

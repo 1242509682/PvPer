@@ -22,7 +22,7 @@ namespace PvPer
                     {
                         HelpCmd(args);
                     }
-                    return; //结束
+                    return; 
                 case "0":
                 case "add":
                 case "邀请":
@@ -34,7 +34,7 @@ namespace PvPer
                     {
                         InviteCmd(args);
                     }
-                    return; //结束
+                    return; 
                 case "1":
                 case "yes":
                 case "接受":

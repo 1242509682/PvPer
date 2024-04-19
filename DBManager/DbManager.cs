@@ -18,7 +18,7 @@ namespace PvPer
                 new SqlColumn("AccountID", MySqlDbType.Int32) { Primary = true, Unique = true },
                 new SqlColumn("Kills", MySqlDbType.Int32),
                 new SqlColumn("Deaths", MySqlDbType.Int32),
-                new SqlColumn("WinStreak", MySqlDbType.Int32) // 添加WinStreak列
+                new SqlColumn("WinStreak", MySqlDbType.Int32)
                 ));
         }
 
@@ -48,15 +48,14 @@ namespace PvPer
             using var reader = _db.QueryReader("SELECT * FROM Players");
             while (reader.Read())
             {
-                list.Add(new DPlayer(reader.Get<int>("AccountID"), reader.Get<int>("Kills"), reader.Get<int>("Deaths"), reader.Get<int>("WinStreak"))); // 添加WinStreak参数
+                list.Add(new DPlayer(reader.Get<int>("AccountID"), reader.Get<int>("Kills"), reader.Get<int>("Deaths"), reader.Get<int>("WinStreak"))); 
             }
             return list;
         }
 
-        // 清空玩家数据表中的所有记录（羽学加）
+
         public static bool ClearData()
         {
-            // 删除Players表中的所有记录
             return _db.Query("DELETE FROM Players") != 0;
         }
     }

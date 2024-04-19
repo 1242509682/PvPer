@@ -1,0 +1,56 @@
+﻿using Microsoft.Xna.Framework;
+using TShockAPI;
+
+namespace PvPer
+{
+    public class PlayerDeathTimer
+    {
+        public static TSPlayer? playerToKill; // 存储即将被杀死的玩家
+
+        private Timer _timer;
+        private int _downSeconds;
+        private TSPlayer _playerToKill;
+
+        public PlayerDeathTimer(int downSeconds, TSPlayer playerToKill)
+        {
+            _downSeconds = downSeconds;
+            _playerToKill = playerToKill;
+        }
+
+        public void Start()
+        {
+            // 定义计时器回调方法
+            TimerCallback timerCallback = new TimerCallback(TimerElapsed);
+
+            // 创建并启动计时器，初始延迟为0，周期为1秒
+            _timer = new Timer(timerCallback, null, 0, 1000);
+        }
+
+        public void Stop()
+        {
+            // 停止并释放计时器资源
+            _timer?.Change(Timeout.Infinite, Timeout.Infinite);
+            _timer?.Dispose();
+            _timer = null;
+        }
+
+        private void TimerElapsed(object state)
+        {
+            // 检查倒计时是否结束
+            if (_downSeconds <= 0)
+            {
+                // 执行死亡操作并发送消息
+                _playerToKill.KillPlayer();
+                _playerToKill.SendMessage("系统已执行死亡。", Color.Yellow);
+
+                // 停止计时器
+                Stop();
+            }
+            else
+            {
+                // 更新倒计时消息
+                _playerToKill.SendMessage($"系统将在{_downSeconds}秒后执行死亡。", Color.Yellow);
+            }
+        }
+    }
+}
